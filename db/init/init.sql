@@ -28,3 +28,17 @@ CREATE TABLE IF NOT EXISTS todos (
 INSERT INTO todos (title, description, status, reporter, assign)
 VALUES ('Test Todo', 'This is a demo task', 'pending', 'admin', 'admin')
 ON CONFLICT DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    todo_id INTEGER REFERENCES todos(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert a sample comment for the sample todo (assuming id=1)
+-- INSERT INTO comments (todo_id, content, author)
+-- VALUES
+--   (1, 'First comment on this todo!', 'alice'),
+--   (1, 'Second comment from bob.', 'bob');
