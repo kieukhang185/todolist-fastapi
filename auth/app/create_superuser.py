@@ -20,7 +20,7 @@ def create_superuser(username, password):
         print("Superuser already exists!")
         return
     hashed_password = pwd_context.hash(password)
-    superuser = User(username=username, hashed_password=hashed_password, is_superuser=True)
+    superuser = User(username=username, hashed_password=hashed_password, role="admin", is_superuser=True)
     db.add(superuser)
     db.commit()
     db.close()

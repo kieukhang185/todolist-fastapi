@@ -1,5 +1,11 @@
 # get logs from docker buils
 docker build --no-cache -t backend-test:0.0.1 --progress=plain . --rm > build-log.txt 2>&1
 
+# create supperuser
+docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py
+
+# remove all local dockre images
+docker rmi $(docker images -q)
+
 import secrets
 secrets.token_hex(32)

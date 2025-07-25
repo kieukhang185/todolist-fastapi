@@ -5,13 +5,14 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    role: str = "view" # view, user, admin
     is_superuser: bool = False 
 
 class User(UserBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str

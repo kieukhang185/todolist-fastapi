@@ -14,7 +14,7 @@ class Comment(CommentBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TodoBase(BaseModel):
     title: str
@@ -40,7 +40,7 @@ class TodoInDBBase(TodoBase):
     comments: List[Comment] = Field(default_factory=list)
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Todo(TodoInDBBase):
     pass

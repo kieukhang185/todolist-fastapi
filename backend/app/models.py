@@ -12,7 +12,7 @@ class Todo(Base):
     description = Column(String, nullable=True)
     status = Column(String, default="new")      # new, todo, in_progress, done, etc.
     reporter = Column(String, nullable=False)       # user who created the todo
-    assign = Column(String, nullable=True)          # user assigned to the todo
+    assign = Column(String, nullable=False)          # user assigned to the todo
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     comments = relationship("Comment", back_populates="todo", cascade="all, delete-orphan")
