@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM hunterbxb/fastapi-base-image:0.0.1
 
 WORKDIR /app
 

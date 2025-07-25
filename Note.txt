@@ -7,5 +7,10 @@ docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py
 # remove all local dockre images
 docker rmi $(docker images -q)
 
+# generate token
 import secrets
 secrets.token_hex(32)
+
+# docker hub
+docker login -u hunterbxb
+docker push hunterbxb/fastapi-base-image:0.0.1
