@@ -1,0 +1,2 @@
+# get logs from docker buils
+docker build --no-cache -t backend-test:0.0.1 --progress=plain . --rm > build-log.txt 2>&1
