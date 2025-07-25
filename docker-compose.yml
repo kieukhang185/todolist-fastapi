@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  auth:
+    build: ./auth
+    env_file:
+      - ./auth/.env
+      - ./.env
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+
+  db:
+    env_file:
+      - ./backend/.env
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - todo_db_data:/var/lib/postgresql/data
+
+volumes:
+  todo_db_data:

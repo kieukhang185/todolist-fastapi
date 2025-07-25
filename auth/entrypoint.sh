@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Wait for Postgres to be ready
 echo "Waiting for postgres..."
 
 # Try up to 30 times (30 seconds)
@@ -16,9 +15,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Postgres is up - starting FastAPI"
+echo "Postgres is up - starting Auth Service"
 
-# Run migrations or create tables here if you wish (optional)
-# python app/init_db.py
-
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+exec uvicorn app.main:app --host 0.0.0.0 --port 8001
