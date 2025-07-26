@@ -8,7 +8,7 @@ function show_help() {
     echo "|  auto app down - Stops and removes containers.          |"
     echo "|  auto app restart - Restarts containers.                |"
     echo "|  auto app logs - Displays real-time logs.               |"
-    echo "|  auto app redup - Rebuilds images and starts containers.|"
+    echo "|  auto app reup - Rebuilds images and starts containers.|"
     echo "|  auto app rebuild - Rebuilds images only                |"
     echo "==========================================================="
 }
@@ -39,7 +39,7 @@ case $choice in
         cmd="docker compose logs -f"
         run_cmd ${cmd}
         ;;
-    redup)
+    reup)
         cmd="docker compose down && docker-compose build && docker-compose up -d"
         run_cmd ${cmd}
         ;;
@@ -49,7 +49,6 @@ case $choice in
         ;;
     help)
         show_help
-        echo "Invalid choice, please auto app with [up , down, restart, reup, rebuild]"
         exit 0
         ;;
     *)
