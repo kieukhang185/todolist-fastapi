@@ -1,0 +1,10 @@
+services:
+  backend:
+    ports:
+      - "8000:8000"
+  auth:
+    ports:
+      - "8001:8001"
+  fontend:
+    ports:
+      - "3000:80"

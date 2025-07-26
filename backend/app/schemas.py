@@ -36,7 +36,7 @@ class TodoUpdate(BaseModel):
 class TodoInDBBase(TodoBase):
     id: int
     created_at: datetime
-    last_edit: datetime
+    updated_at: datetime
     comments: List[Comment] = Field(default_factory=list)
 
     class Config:

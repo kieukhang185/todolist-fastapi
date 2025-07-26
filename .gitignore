@@ -1,8 +1,5 @@
 # Ignore environment variable files
 .env
-./backend/.env
-./frontend/.env
-./db/.env
-./gateway/.env
-./notification/.env
-./auth/.env
+
+./fontend/.env
+./fontend/node_modules
