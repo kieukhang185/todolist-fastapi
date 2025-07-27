@@ -7,6 +7,8 @@ docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py
 # remove all local dockre images
 docker rmi $(docker images -q)
 
+docker system prune -a
+
 # generate token
 import secrets
 secrets.token_hex(32)

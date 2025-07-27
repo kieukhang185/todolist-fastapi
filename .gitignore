@@ -2,4 +2,4 @@
 .env
 
 ./fontend/.env
-./fontend/node-modules
+./fontend/node_modules

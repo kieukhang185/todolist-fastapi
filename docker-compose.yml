@@ -4,8 +4,8 @@ services:
     build: ./backend
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - db
 
@@ -13,10 +13,13 @@ services:
     build: ./auth
     env_file:
       - .env
-    ports:
-      - "8001:8001"
+    expose:
+      - "8001"
     depends_on:
       - db
+
+  fontend:
+    build: ./fontend
 
   db:
     env_file:
@@ -27,6 +30,18 @@ services:
     volumes:
       - todo_db_data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
+
+  gateway:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - auth
+      - fontend
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./fontend/dist:/usr/share/nginx/html
 
 volumes:
   todo_db_data:
