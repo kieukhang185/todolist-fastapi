@@ -1,5 +1,4 @@
 # Ignore environment variable files
 .env
 
-./fontend/.env
 ./fontend/node_modules

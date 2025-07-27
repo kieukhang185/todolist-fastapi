@@ -4,10 +4,28 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import { AuthProvider, useAuth } from "./AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
+  const { token, setToken } = useAuth();
+  console.log("PrivateRoute: token is", token);
+
+  if (!token) return <Navigate to="/login" />;
+
+  try {
+    const decoded: any = jwtDecode(token);
+    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+      setToken(null);
+      localStorage.removeItem("token");
+      return <Navigate to="/login" />;
+    }
+  } catch (err) {
+    setToken(null);
+    localStorage.removeItem("token");
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 }
 
 function App() {
@@ -15,9 +33,10 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          {/* All other routes require login */}
+          <Route path="/*" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
         </Routes>
       </BrowserRouter>

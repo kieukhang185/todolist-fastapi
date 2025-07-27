@@ -21,3 +21,6 @@ docker push hunterbxb/fastapi-base-image:0.0.1
 cd fontend
 npm install
 npm run dev
+
+Cannot find module '@chakra-ui/react' or its corresponding type declarations
+ctrl+shift+p restart ts server
