@@ -4,13 +4,13 @@ import { api } from "../api";
 import { useAuth } from "../AuthContext";
 
 type Comment = {
-  id: number;
+  id: string;
   content: string;
   author: string;
   created_at: string;
 };
 
-export default function CommentList({ todoId }: { todoId: number }) {
+export default function CommentList({ todoId }: { todoId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
   const { token } = useAuth();

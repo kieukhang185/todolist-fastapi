@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { jwtDecode } from "jwt-decode";
+import { Flex } from "@chakra-ui/react";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token, setToken } = useAuth();
@@ -31,15 +32,17 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          {/* All other routes require login */}
-          <Route path="/*" element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
-        </Routes>
-      </BrowserRouter>
+      <Flex direction="column" minH="100vh" bg="gray.50">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* All other routes require login */}
+            <Route path="/*" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
+          </Routes>
+        </BrowserRouter>
+      </Flex>
     </AuthProvider>
   );
 }
