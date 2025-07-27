@@ -10,3 +10,5 @@ export const api = axios.create({
 export const authApi = axios.create({
   baseURL: AUTH_URL,
 });
+
+export const getTodoTypes = () => api.get("/todo-types/");

@@ -16,6 +16,8 @@ class Todo(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     comments = relationship("Comment", back_populates="todo", cascade="all, delete-orphan")
+    type_name = Column(String, ForeignKey("todo_types.name"), nullable=False)
+    type = relationship("TodoType")
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -25,3 +27,8 @@ class Comment(Base):
     author = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     todo = relationship("Todo", back_populates="comments")
+
+class TodoType(Base):
+    __tablename__ = "todo_types"
+    name = Column(String, primary_key=True, index=True) 
+    description = Column(String, nullable=True)

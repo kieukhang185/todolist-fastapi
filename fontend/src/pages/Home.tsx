@@ -6,6 +6,7 @@ import TodoForm from "../components/TodoForm";
 import CommentList from "../components/CommentList";
 
 export type Todo = {
+  type: string;
   id: number;
   title: string;
   description?: string;

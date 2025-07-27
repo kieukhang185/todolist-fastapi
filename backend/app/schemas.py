@@ -21,6 +21,7 @@ class TodoBase(BaseModel):
     description: str = None
     status: Optional[str] = "new"
     reporter: str
+    type_name: str
     assign: Optional[str] = None
 
 class TodoCreate(TodoBase):
@@ -32,9 +33,10 @@ class TodoUpdate(BaseModel):
     status: Optional[str] = None
     reporter: Optional[str] = None
     assign: Optional[str] = None
+    type_name: str
 
 class TodoInDBBase(TodoBase):
-    id: int
+    id: str
     created_at: datetime
     updated_at: datetime
     comments: List[Comment] = Field(default_factory=list)
@@ -45,3 +47,13 @@ class TodoInDBBase(TodoBase):
 class Todo(TodoInDBBase):
     pass
 
+class TodoTypeSchema(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+class TodoTypeCreate(BaseModel):
+    name: str
+    description: Optional[str] = None

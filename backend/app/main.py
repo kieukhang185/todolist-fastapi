@@ -70,3 +70,35 @@ def list_comments(todo_id: int, db: Session = Depends(get_db)):
     if not todo:
         raise HTTPException(status_code=404, detail="Todo not found")
     return crud.get_comments(db, todo_id)
+
+@app.get("/todo-types/", response_model=list[schemas.TodoTypeSchema])
+def list_types(db: Session = Depends(get_db)):
+    return db.query(models.TodoType).all()
+
+@app.post("/todo-types/", response_model=schemas.TodoTypeSchema)
+def create_type(type_in: schemas.TodoTypeCreate, db: Session = Depends(get_db)):
+    db_type = models.TodoType(name=type_in.name, description=type_in.description)
+    db.add(db_type)
+    db.commit()
+    db.refresh(db_type)
+    return db_type
+
+@app.put("/todo-types/{type_id}", response_model=schemas.TodoTypeSchema)
+def update_type(type_id: int, type_in: schemas.TodoTypeCreate, db: Session = Depends(get_db)):
+    db_type = db.query(models.TodoType).filter_by(id=type_id).first()
+    if not db_type:
+        raise HTTPException(status_code=404, detail="Type not found")
+    db_type.name = type_in.name
+    db_type.description = type_in.description
+    db.commit()
+    db.refresh(db_type)
+    return db_type
+
+@app.delete("/todo-types/{type_id}")
+def delete_type(type_id: int, db: Session = Depends(get_db)):
+    db_type = db.query(models.TodoType).filter_by(id=type_id).first()
+    if not db_type:
+        raise HTTPException(status_code=404, detail="Type not found")
+    db.delete(db_type)
+    db.commit()
+    return {"ok": True}

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Box, Input, Button, Select, VStack, Textarea, HStack, useToast } from "@chakra-ui/react";
-import { api } from "../api";
+import { api, getTodoTypes } from "../api";
 import { useAuth } from "../AuthContext";
 import { Todo } from "../pages/Home";
 
-const statuses = ["pending", "in_progress", "done", "new"];
+type TodoType = { id: number; name: string; description?: string };
 
 type Props = {
   onCreated: () => void;
@@ -16,10 +16,25 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
   const { token } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [type, setType] = useState("");    // selected todo type (name or id)
+  const [types, setTypes] = useState<TodoType[]>([]);
   const [status, setStatus] = useState("pending");
   const [assign, setAssign] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+
+  // Fetch todo types from backend
+  useEffect(() => {
+    getTodoTypes().then(res => {
+      setTypes(res.data);
+      // Set default type to first available, or keep from editingTodo
+      if (editingTodo) {
+        setType(editingTodo.type || "");
+      } else if (res.data.length > 0) {
+        setType(res.data[0].name);
+      }
+    });
+  }, [editingTodo]);
 
   useEffect(() => {
     if (editingTodo) {
@@ -27,11 +42,13 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
       setDescription(editingTodo.description || "");
       setStatus(editingTodo.status);
       setAssign(editingTodo.assign || "");
+      setType(editingTodo.type || "");
     } else {
       setTitle("");
       setDescription("");
       setStatus("pending");
       setAssign("");
+      // type is set in the fetch
     }
   }, [editingTodo]);
 
@@ -39,7 +56,7 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
     e.preventDefault();
     setLoading(true);
 
-    const body = { title, description, status, assign, reporter: "me" }; // TODO: Get from token/me
+    const body = { title, description, status, assign, type, reporter: "me" };
 
     const headers = { Authorization: `Bearer ${token}` };
     if (editingTodo) {
@@ -70,8 +87,16 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
           placeholder="Description"
         />
         <HStack>
-          <Select value={status} onChange={e => setStatus(e.target.value)}>
-            {statuses.map(s => <option key={s}>{s}</option>)}
+          <Select
+            value={type}
+            onChange={e => setType(e.target.value)}
+            required
+          >
+            {types.map(t => (
+              <option key={t.id} value={t.name}>
+                {t.name} {t.description ? `- ${t.description}` : ""}
+              </option>
+            ))}
           </Select>
           <Input
             value={assign}

@@ -1,0 +1,120 @@
+ Recommended Dev Workflow
+A. Use Docker Compose for Backend, Auth, DB, Gateway
+Expose backend and auth API ports so you can use /docs and test easily.
+
+Use the gateway for full integration testing.
+
+Use the Vite dev server for the frontend for instant hot reload.
+
+Example docker-compose.yml for Dev
+yaml
+Copy
+Edit
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  auth:
+    build: ./auth
+    env_file:
+      - .env
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"  # Optional: only if you want to connect with DBeaver/pgAdmin
+    volumes:
+      - todo_db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+
+  gateway:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - auth
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/dist:/usr/share/nginx/html
+
+volumes:
+  todo_db_data:
+B. Run Frontend Separately With Hot Reload
+On your host:
+
+sh
+Copy
+Edit
+cd frontend
+npm install
+npm run dev
+This starts Vite on http://localhost:5173, auto-reloading when you edit React code.
+
+C. Configure Frontend for Local API
+In frontend/.env:
+
+env
+Copy
+Edit
+VITE_API_URL=http://localhost:8000
+VITE_AUTH_URL=http://localhost:8001
+Or use Vite's dev proxy (recommended):
+In vite.config.ts:
+
+ts
+Copy
+Edit
+server: {
+  proxy: {
+    '/api': 'http://localhost:8000',
+    '/auth': 'http://localhost:8001',
+  }
+}
+Now, your frontend can call /api/todos/ and /auth/token and Vite will forward the requests to the backend and auth containers.
+
+D. Use the Gateway for Integration Testing
+When ready, build the frontend with npm run build and use the gateway on http://localhost/.
+
+API requests from the built frontend will be routed through the gateway.
+
+🟨 How to Run Everything
+Start Docker services:
+
+sh
+Copy
+Edit
+docker-compose up --build
+Start the frontend dev server (in another terminal):
+
+sh
+Copy
+Edit
+cd frontend
+npm run dev
+Work on your React app at http://localhost:5173
+
+Test backend API at http://localhost:8000/docs
+
+Test auth API at http://localhost:8001/docs
+
+Test the full stack via gateway at http://localhost/
+
+🟩 Summary Table
+Service	Dev URL	For
+Frontend	http://localhost:5173	Dev/hot reload
+Backend	http://localhost:8000	API docs/testing
+Auth	http://localhost:8001	API docs/testing
+Gateway	http://localhost/	Integration, prod
