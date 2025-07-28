@@ -46,7 +46,7 @@ export default function Home() {
     <Box minH="100vh" display="flex" flexDirection="column" bg="gray.50">
       <Navbar onTodoCreated={fetchTodos} />
       <Box flex="1" px={{ base: 2, md: 8 }} py={6} maxW="900px" mx="auto" w="100%">
-        <TodoList todos={todos} onEdit={handleEdit} onDelete={handleDelete}/>
+        <TodoList todos={todos} onTodoUpdated={fetchTodos}/>
       </Box>
     </Box>
   );
