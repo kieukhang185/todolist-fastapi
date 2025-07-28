@@ -14,6 +14,14 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
+class UserOut(UserBase):
+    id: int
+    is_superuser: bool
+    role: str
+
+    class Config:
+        from_attributes = True
+
 class Token(BaseModel):
     access_token: str
     token_type: str

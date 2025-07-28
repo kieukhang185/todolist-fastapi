@@ -8,13 +8,13 @@ export default function AdminPanel({ users }: Props) {
     <Box borderWidth="1px" borderRadius="lg" p={6} shadow="md">
       <Heading size="md" mb={4}>User Management</Heading>
       <List spacing={2}>
-        {users.map(user => (
+        {Array.isArray(users) ? users.map(user => (
           <ListItem key={user.id}>
             <Text>
               {user.username} {user.is_superuser && "(admin)"}
             </Text>
           </ListItem>
-        ))}
+        )) : <Text>No users found.</Text>}
       </List>
     </Box>
   );

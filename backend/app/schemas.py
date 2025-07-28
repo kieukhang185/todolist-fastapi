@@ -12,6 +12,7 @@ class CommentCreate(CommentBase):
 class Comment(CommentBase):
     id: int
     created_at: datetime
+    todo_id: str
 
     class Config:
         from_attributes = True

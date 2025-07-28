@@ -22,7 +22,7 @@ class Todo(Base):
 class Comment(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, index=True)
-    todo_id = Column(Integer, ForeignKey("todos.id"), nullable=False)
+    todo_id = Column(String, ForeignKey("todos.id"), nullable=False)
     content = Column(String, nullable=False)
     author = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

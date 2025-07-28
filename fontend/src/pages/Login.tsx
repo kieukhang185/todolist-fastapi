@@ -17,7 +17,6 @@ export default function Login() {
       .then(res => {
         setToken(res.data.access_token);
         localStorage.setItem("token", res.data.access_token);
-        console.log("Token set, navigating to /");
         navigate("/");
       })
       .catch(() => setErr("Invalid credentials"));

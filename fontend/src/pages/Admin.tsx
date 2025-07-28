@@ -4,7 +4,7 @@ import { useAuth } from "../AuthContext";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import AdminPanel from "../components/AdminPanel";
 
-type User = { id: number; username: string; is_superuser: boolean };
+type User = { id: number; username: string; is_superuser: boolean, role: string };
 
 export default function Admin() {
   const { token } = useAuth();
@@ -18,6 +18,7 @@ export default function Admin() {
     authApi.get("/users", { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setUsers(res.data));
   }, [token]);
+  console.log(me)
 
   if (!me) return <div>Loading...</div>;
   if (!me.is_superuser) return <div>Not authorized.</div>;

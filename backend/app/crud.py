@@ -24,7 +24,7 @@ def generate_todo_id(db, type_name):
     return f"{prefix}-{next_num:02d}"
 
 
-def get_todo(db: Session, todo_id: int):
+def get_todo(db: Session, todo_id: str):
     return db.query(models.Todo).filter(models.Todo.id == todo_id).first()
 
 def get_todos(db: Session, skip: int = 0, limit: int = 100):
@@ -49,7 +49,7 @@ def create_todo(db: Session, todo: schemas.TodoCreate):
     db.refresh(db_todo)
     return db_todo
 
-def update_todo(db: Session, todo_id: int, todo_update: schemas.TodoUpdate):
+def update_todo(db: Session, todo_id: str, todo_update: schemas.TodoUpdate):
     todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not todo:
         return None
@@ -61,7 +61,7 @@ def update_todo(db: Session, todo_id: int, todo_update: schemas.TodoUpdate):
     db.refresh(todo)
     return todo
 
-def delete_todo(db: Session, todo_id: int):
+def delete_todo(db: Session, todo_id: str):
     todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not todo:
         return None
@@ -69,10 +69,10 @@ def delete_todo(db: Session, todo_id: int):
     db.commit()
     return todo
 
-def get_comments(db: Session, todo_id: int):
+def get_comments(db: Session, todo_id: str):
     return db.query(models.Comment).filter(models.Comment.todo_id == todo_id).all()
 
-def create_comment(db: Session, todo_id: int, comment: schemas.CommentCreate):
+def create_comment(db: Session, todo_id: str, comment: schemas.CommentCreate):
     db_comment = models.Comment(todo_id=todo_id, **comment.dict())
     db.add(db_comment)
     db.commit()
