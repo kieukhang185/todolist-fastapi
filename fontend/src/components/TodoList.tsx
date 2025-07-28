@@ -1,4 +1,4 @@
-import { Box, Heading, VStack, HStack, Button, Text } from "@chakra-ui/react";
+import { Box, Heading, VStack, HStack, Text } from "@chakra-ui/react";
 import { Todo } from "../pages/Home";
 
 type Props = {
@@ -8,24 +8,34 @@ type Props = {
 };
 
 export default function TodoList({ todos, onEdit, onDelete }: Props) {
+  // Group todos by status
+  const grouped = todos.reduce<Record<string, Todo[]>>((acc, todo) => {
+    acc[todo.status] = acc[todo.status] || [];
+    acc[todo.status].push(todo);
+    return acc;
+  }, {});
+
   return (
-    <VStack spacing={4} align="stretch">
-      {todos.map(todo => (
-        <Box key={todo.id} p={4} shadow="md" borderWidth="1px" borderRadius="md">
-          <HStack justify="space-between">
-            <Heading size="sm">{todo.title}</Heading>
-            <Text fontSize="sm">{todo.status}</Text>
-          </HStack>
-          <Text>{todo.description}</Text>
-          <Text fontSize="sm" color="gray.500">
-            Reporter: {todo.reporter} | Assigned: {todo.assign || "-"}
-          </Text>
-          {onEdit && onDelete && (
-            <HStack mt={2}>
-              <Button size="xs" colorScheme="blue" onClick={() => onEdit(todo)}>Edit</Button>
-              <Button size="xs" colorScheme="red" onClick={() => onDelete(todo)}>Delete</Button>
-            </HStack>
-          )}
+    <VStack spacing={6} align="stretch">
+      {Object.keys(grouped).map(status => (
+        <Box key={status}>
+          <Heading size="md" mb={2} textTransform="capitalize">{status.replace("_", " ")}</Heading>
+          <VStack spacing={2} align="stretch">
+            {grouped[status].map(todo => (
+              <Box key={todo.id} p={3} shadow="sm" borderWidth="1px" borderRadius="md" bg="white" >
+                <HStack justify="space-between">
+                  <Text fontWeight="bold">{todo.id}: {todo.title}</Text>
+                  <Text>{todo.type_name}</Text>
+                </HStack>
+                {/* {onEdit && onDelete && (
+                  <HStack mt={2}>
+                    <Text as="button" color="blue.500" fontWeight="semibold" onClick={() => onEdit(todo)}>Edit</Text>
+                    <Text as="button" color="red.500" fontWeight="semibold" onClick={() => onDelete(todo)}>Delete</Text>
+                  </HStack>
+                )} */}
+              </Box>
+            ))}
+          </VStack>
         </Box>
       ))}
     </VStack>

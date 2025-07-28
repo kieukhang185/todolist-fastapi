@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
+from datetime import datetime
 
 def generate_todo_id(db, type_name):
     # Find latest todo with this type, extract number, and increment
@@ -37,11 +38,11 @@ def create_todo(db: Session, todo: schemas.TodoCreate):
         type_name=todo.type_name,
         title=todo.title,
         description=todo.description,
-        status=todo.status,
+        status='new',
         reporter=todo.reporter,
         assign=todo.assign,
         created_at=datetime.utcnow(),
-        last_edit=datetime.utcnow(),
+        updated_at=datetime.utcnow(),
         # ... any other fields ...
     )
     db.add(db_todo)

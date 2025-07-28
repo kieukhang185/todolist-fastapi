@@ -16,7 +16,7 @@ export type Todo = {
   assign?: string;
   type_name: string;
   created_at: string;
-  last_edit: string;
+  updated_at: string;
 };
 
 export default function Home() {
@@ -42,34 +42,12 @@ export default function Home() {
       .catch(() => toast({ status: "error", title: "Delete failed" }));
   }
 
-  return (
-    <Box flex="1" maxW="100vw" minH="0">
+    return (
+    <Box minH="100vh" display="flex" flexDirection="column" bg="gray.50">
       <Navbar onTodoCreated={fetchTodos} />
-      <Heading mb={4}>Todos</Heading>
-      <VStack spacing={4} align="stretch">
-        {todos.map(todo => (
-          <Box key={todo.id} p={4} shadow="md" borderWidth="1px" borderRadius="md">
-            <HStack justify="space-between">
-              <Heading size="md">{todo.title}</Heading>
-              <Text fontSize="sm">{todo.status}</Text>
-            </HStack>
-            <Text>{todo.description}</Text>
-            <Text fontSize="sm" color="gray.500">
-              Type: {todo.type_name} | Reporter: {todo.reporter} | Assigned: {todo.assign || "-"}<br />
-              Created: {new Date(todo.created_at).toLocaleString()} | Last Edit: {new Date(todo.last_edit).toLocaleString()}
-            </Text>
-            {token && (
-              <HStack mt={2}>
-                <Button size="xs" colorScheme="blue" onClick={() => handleEdit(todo)}>Edit</Button>
-                <Button size="xs" colorScheme="red" onClick={() => handleDelete(todo)}>Delete</Button>
-              </HStack>
-            )}
-            <Box mt={4}>
-              <CommentList todoId={todo.id} />
-            </Box>
-          </Box>
-        ))}
-      </VStack>
+      <Box flex="1" px={{ base: 2, md: 8 }} py={6} maxW="900px" mx="auto" w="100%">
+        <TodoList todos={todos} onEdit={handleEdit} onDelete={handleDelete}/>
+      </Box>
     </Box>
   );
 }

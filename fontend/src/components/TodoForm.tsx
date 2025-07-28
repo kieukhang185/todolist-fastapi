@@ -16,9 +16,9 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
   const { token } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("");    // selected todo type (name or id)
+  const [type_name, setType] = useState("");    // selected todo type (name or id)
   const [types, setTypes] = useState<TodoType[]>([]);
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("new");
   const [assign, setAssign] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -46,7 +46,7 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
     } else {
       setTitle("");
       setDescription("");
-      setStatus("pending");
+      setStatus("");
       setAssign("");
       // type is set in the fetch
     }
@@ -56,7 +56,8 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
     e.preventDefault();
     setLoading(true);
 
-    const body = { title, description, status, assign, type, reporter: "me" };
+    const body = { title, description, status, assign, type_name, reporter: "admin" };
+    console.log(body)
 
     const headers = { Authorization: `Bearer ${token}` };
     if (editingTodo) {
@@ -88,7 +89,7 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
         />
         <HStack>
           <Select
-            value={type}
+            value={type_name}
             onChange={e => setType(e.target.value)}
             required
           >
