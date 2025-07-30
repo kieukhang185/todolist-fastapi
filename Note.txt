@@ -1,0 +1,29 @@
+# get logs from docker buils
+docker build --no-cache -t backend-test:0.0.1 --progress=plain . --rm > build-log.txt 2>&1
+
+# create supperuser
+docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py
+
+# remove all local dockre images
+docker rmi $(docker images -q)
+
+docker system prune -a
+
+# generate token
+import secrets
+secrets.token_hex(32)
+
+# docker hub
+docker login -u hunterbxb
+docker push hunterbxb/fastapi-base-image:0.0.1
+
+## run fontend dev
+cd fontend
+npm install
+npm run dev
+
+Cannot find module '@chakra-ui/react' or its corresponding type declarations
+ctrl+shift+p restart ts server
+
+sudo apt-get install npm
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion axios react-router-dom
