@@ -76,12 +76,7 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
   return (
     <Box as="form" onSubmit={handleSubmit} mb={4}>
       <VStack spacing={2} align="stretch">
-        <Input
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="Todo title"
-          required
-        />
+        <Input value={title}onChange={e => setTitle(e.target.value)} placeholder="Todo title" required />
         <Textarea
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -94,16 +89,10 @@ export default function TodoForm({ onCreated, editingTodo, onUpdated }: Props) {
             required
           >
             {types.map(t => (
-              <option key={t.id} value={t.name}>
-                {t.name} {t.description ? `- ${t.description}` : ""}
-              </option>
+              <option key={t.id} value={t.name}>{t.name.toUpperCase()}</option>
             ))}
           </Select>
-          <Input
-            value={assign}
-            onChange={e => setAssign(e.target.value)}
-            placeholder="Assign to"
-          />
+          {/* <Input value={assign} onChange={e => setAssign(e.target.value)} placeholder="Assign to"/> */}
         </HStack>
         <Button colorScheme="green" type="submit" isLoading={loading}>
           {editingTodo ? "Update Todo" : "Create Todo"}

@@ -7,18 +7,16 @@ get_current_system() {
     # Get the current system information ubuntu or debian or linux
     if [ -f /etc/os-release ]; then
         . /etc/os-release
-        echo "Current system: $NAME"
-        return $NAME
+        echo $NAME
     else
-        echo "Could not determine the current system."
-        return 1
+        exit 1
     fi
 }
 
 setup(){
     # Update and install necessary packages
     sudo apt-get update
-    sudo apt-get install -y git curl
+    sudo apt-get install -y git curl npm
 
     # Install Docker if not already installed
     if ! command -v docker &> /dev/null; then
@@ -43,17 +41,17 @@ install_docker() {
     fi
 
     # Add Docker's official GPG key:
-    sudo apt-get install ca-certificates
+    sudo apt-get install -y ca-certificates
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/$system/gpg -o /etc/apt/keyrings/docker.asc
+    sudo curl -fsSL https://download.docker.com/linux/${system,,}/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     # Add the repository to Apt sources:
     echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/$system \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/${system,,} \
     $(. /etc/os-release && echo "${CODENAME:-$VERSION_CODENAME}") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo chmod 666 /var/run/docker.sock
 }

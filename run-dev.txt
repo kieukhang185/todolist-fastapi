@@ -67,7 +67,6 @@ C. Configure Frontend for Local API
 In frontend/.env:
 
 env
-Copy
 Edit
 VITE_API_URL=http://localhost:8000
 VITE_AUTH_URL=http://localhost:8001

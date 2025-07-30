@@ -38,7 +38,6 @@ function App() {
             <Route path="/register" element={<Register />} />
             {/* All other routes require login */}
             <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-            <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
           </Routes>
         </BrowserRouter>
       </Flex>

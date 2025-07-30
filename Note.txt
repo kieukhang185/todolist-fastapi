@@ -24,3 +24,6 @@ npm run dev
 
 Cannot find module '@chakra-ui/react' or its corresponding type declarations
 ctrl+shift+p restart ts server
+
+sudo apt-get install npm
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion axios react-router-dom

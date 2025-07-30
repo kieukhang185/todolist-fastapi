@@ -29,9 +29,6 @@ export default function Navbar({ onTodoCreated }: { onTodoCreated: () => void })
           Todo App
         </Heading>
         <Spacer />
-        <Button as={Link} to="/admin" variant="ghost" color="white" mr={3}>
-          Admin
-        </Button>
         {token && (
           <Button colorScheme="teal" variant="solid" onClick={onOpen} mr={3}>
             + Create Todo

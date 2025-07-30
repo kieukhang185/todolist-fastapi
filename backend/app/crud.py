@@ -57,7 +57,6 @@ def update_todo(db: Session, todo_id: str, todo_update: schemas.TodoUpdate):
     update_data = todo_update.dict(exclude_unset=True)
     for key, value in update_data.items():
         setattr(todo, key, value)
-    todo_obj.updated_at = datetime.utcnow() 
     db.commit()
     db.refresh(todo)
     return todo
