@@ -1,0 +1,328 @@
+Todolist FastAPI – Backend mở rộng, dễ mở rộng cho hệ thống quản lý công việc
+Người tạo: kieukhang
+Công nghệ sử dụng: FastAPI · PostgreSQL · Alembic · Docker · SQLAlchemy · Pydantic
+
+🧩 Tổng quan
+Todolist-FastAPI là một API backend mạnh mẽ, dễ mở rộng, được thiết kế cho các hệ thống quản lý công việc hiện đại. Ứng dụng tuân theo kiến trúc sạch (clean architecture) và có khả năng tích hợp trong mô hình microservices, giúp xử lý đầy đủ các thao tác với công việc như:
+- Tạo mới
+- Chỉnh sửa
+- Tổ chức công việc theo epic và subtask
+- Theo dõi trạng thái từng việc
+
+Đây là một lựa chọn lý tưởng để làm nền tảng cho các ứng dụng quản lý công việc full-stack: từ ứng dụng cá nhân kiểu kanban, dashboard kiểu Scrum cho đến nền tảng cộng tác nhóm.
+
+🏗️ Kiến trúc hệ thống
+
+Client (Web/React hoặc Mobile)
+        │
+    [API Gateway / Nginx]
+        │
+ ┌──────┴────────────┐
+ │  todolist-fastapi (repo này)  
+ │  - Dịch vụ chính: CRUD Todo
+ │
+ └── Sử dụng:
+     • PostgreSQL: lưu trữ dữ liệu
+     • Alembic: quản lý thay đổi DB
+     • Docker: triển khai container
+
+👉 Có thể tích hợp với:
+- Dịch vụ xác thực người dùng (OAuth2, JWT)
+- Dịch vụ backend khác
+- Dịch vụ frontend độc lập
+
+🔑 Tính năng nổi bật
+Tính năng	Mô tả
+✅ CRUD Todos: Tạo, xem, cập nhật, xoá todo với tiêu đề, mô tả, trạng thái
+🧩 Epic & Subtask Support: Tổ chức công việc thành các epic lớn và phân rã thành subtask
+🧪 Swagger & ReDoc: Tài liệu API tự động, tương tác trực tiếp
+📦 Cơ sở dữ liệu PostgreSQL: Lưu trữ dữ liệu hiệu quả, an toàn
+🐳 Docker Support: Triển khai dễ dàng bằng container Docker
+
+📁 Cấu trúc thư mục
+todolist-fastapi/
+├── Note.txt
+├── README.md
+├── auth
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app
+│   │   ├──  __init__.py
+│   │   ├── create_superuser.py
+│   │   ├── crud.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── schemas.py
+│   ├── docker-compose.yaml
+│   ├── entrypoint.sh
+│   └── requirements.txt
+├── auto.sh
+├── backend
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app
+│   │   ├── __init__.py
+│   │   ├── crud.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── schemas.py
+│   ├── docker-compose.yaml
+│   ├── entrypoint.sh
+│   └── requirements.txt
+├── base-image
+├── db
+│   ├── README.md
+│   └── init
+│       └── init.sql
+├── docker-compose.override.yml
+├── docker-compose.yml
+├── fontend
+│   ├── Dockerfile
+│   ├── dist
+│   │   ├── assets
+│   │   │   └── index-CzWyahYT.js
+│   │   └── index.html
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── AuthContext.tsx
+│   │   ├── api.ts
+│   │   ├── components
+│   │   │   ├── AdminPanel.tsx
+│   │   │   ├── CommentList.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── TodoDetailModal.tsx
+│   │   │   ├── TodoForm.tsx
+│   │   │   └── TodoList.tsx
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   │   ├── Admin.tsx
+│   │   │   ├── Home.tsx
+│   │   │   ├── Login.tsx
+│   │   │   └── Register.tsx
+│   │   └── vite-env.d.ts
+│   └── vite.config.ts
+├── gateway
+│   ├── README.md
+│   └── nginx.conf
+├── notification
+│   └── README.md
+├── run-dev.txt
+├── shell-scripts
+│   └── start_app.sh
+└── webapp-introduction.txt
+
+
+🚀 Hướng dẫn chạy (trên Linux)
+
+# Bước 1: Di chuyển vào thư mục dự án
+cd todolist-fastapi
+
+# Bước 2: Chạy script thiết lập môi trường
+source auto.sh
+setup  # Tự động cài đặt thư viện Python và thiết lập ban đầu
+
+# Bước 3: Tạo file môi trường
+cp .env.example .env
+# Sau đó thay thế biến SECRET_KEY bằng token được tạo bằng lệnh sau:
+python3 -c "import secrets; print(secrets.token_hex(32))"
+
+# Bước 4: Cài đặt thư viện frontend
+cd fontend
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion axios react-router-dom
+npm install
+
+# Bước 5: Chạy toàn bộ app với Docker
+cd ..
+docker compose up --build
+
+# Bước 6: Mở terminal khác để tạo tài khoản admin
+docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py
+# Tài khoản: admin / Mật khẩu: amin
+
+# Truy cập giao diện tại:
+http://localhost
+
+# API Docs:
+http://localhost:8000/docs
+📅 Lộ trình phát triển
+✅ CRUD cơ bản cho công việc
+✅ Cấu trúc Epic và Subtask
+⏳ Bộ lọc trạng thái công việc (completed, in-progress, pending)
+⏳ Thêm unit test và integration test
+✅ Hệ thống xác thực với JWT
+✅ Docker Compose cho hệ thống đa dịch vụ
+✅ Tích hợp frontend React
+⏳ Trang admin phân tích công việc
+⏳ Chatbox AI hỗ trợ người dùng (LLM)
+⏳ CI/CD với GitHub Actions
+
+💡 Ứng dụng thực tế
+Ứng dụng quản lý công việc cá nhân
+Dự án học tập thực hành FastAPI + Docker
+Backend cho hệ thống quản lý công việc full-stack
+Demo mô hình kiến trúc microservices
+
+
+
+################################################################
+English version
+################################################################
+Todolist FastAPI – Scalable Backend for Task Management
+Created by:kieukhang
+Stack: FastAPI · PostgreSQL · Alembic · Docker · SQLAlchemy · Pydantic
+
+Overview
+Todolist-FastAPI is a powerful, extensible backend API for a modern task management system. Designed with clean architecture and microservices-ready principles,
+this service handles all core todo operations such as task creation, editing, organizing into epics and subtasks, and tracking status — making it ideal as the foundation for a full-stack productivity app.
+Whether you're building a personal kanban board, a Scrum-like dashboard, or a team collaboration platform, this backend offers the performance and structure to scale.
+
+Architecture
+
+Client (Web/React or Mobile)
+        │
+    [API Gateway / Nginx]
+        │
+ ┌──────┴────────┐
+ │  todolist-fastapi (this repo)  
+ │  - Main Todo CRUD Service
+ │
+ └── Uses:
+     • PostgreSQL for data
+     • Alembic for migrations
+     • Docker for deployment
+Pluggable for integration with:
+- Auth Service (OAuth2, JWT)
+- Backend Service
+- Fontend Service
+
+🔑 Features
+Feature	Description
+✅ CRUD Todos: Create, update, delete, view todos with title, description, status
+🧩 Epic & Subtask Support: Todos can be grouped into epics and broken into subtasks
+🧪 Swagger & ReDoc Docs: Built-in interactive API docs
+📦 PostgreSQL Database: Fast, reliable data storage
+🐳 Docker Support	Easy to containerize and deploy
+
+🏗️ Folder Structure
+todolist-fastapi/
+├── Note.txt
+├── README.md
+├── auth
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app
+│   │   ├──  __init__.py
+│   │   ├── create_superuser.py
+│   │   ├── crud.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── schemas.py
+│   ├── docker-compose.yaml
+│   ├── entrypoint.sh
+│   └── requirements.txt
+├── auto.sh
+├── backend
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app
+│   │   ├── __init__.py
+│   │   ├── crud.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── schemas.py
+│   ├── docker-compose.yaml
+│   ├── entrypoint.sh
+│   └── requirements.txt
+├── base-image
+├── db
+│   ├── README.md
+│   └── init
+│       └── init.sql
+├── docker-compose.override.yml
+├── docker-compose.yml
+├── fontend
+│   ├── Dockerfile
+│   ├── dist
+│   │   ├── assets
+│   │   │   └── index-CzWyahYT.js
+│   │   └── index.html
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── AuthContext.tsx
+│   │   ├── api.ts
+│   │   ├── components
+│   │   │   ├── AdminPanel.tsx
+│   │   │   ├── CommentList.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── TodoDetailModal.tsx
+│   │   │   ├── TodoForm.tsx
+│   │   │   └── TodoList.tsx
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   │   ├── Admin.tsx
+│   │   │   ├── Home.tsx
+│   │   │   ├── Login.tsx
+│   │   │   └── Register.tsx
+│   │   └── vite-env.d.ts
+│   └── vite.config.ts
+├── gateway
+│   ├── README.md
+│   └── nginx.conf
+├── notification
+│   └── README.md
+├── run-dev.txt
+├── shell-scripts
+│   └── start_app.sh
+└── webapp-introduction.txt
+
+🚀 Getting Started (Local Linux)
+
+cd todolist-fastapi
+source auto.sh
+setup # install all dependencies to run webapp
+
+copy .env.example to .env and replace SECRET_KEY with token generete below
+
+# generate token
+python3 -c "import secrets; print(secrets.token_hex(32))"
+
+cd fontend
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion axios react-router-dom
+npm install
+
+cd ..
+docker compose up --build
+
+# open new terminal
+# create a admin account user: admin - pass: amin
+docker exec todolist-fastapi-auth-1 python3 app/create_superuser.py 
+
+# access to http://localhost
+
+# 5. Access docs
+http://localhost:8000/docs
+
+
+📅 Roadmap
+✅  CRUD for todos
+✅  Epic + Subtask structure
+    Todo status filter (e.g. completed, in-progress, pending)
+    Add unit & integration tests
+✅  JWT authentication system
+✅  Docker Compose + multi-service setup
+✅  React-based frontend repo
+    Admin panel with task analytics
+    Chatbox assistant integration (LLM)
+    CI/CD pipeline (GitHub Actions)
+
+💡 Use Cases
+Personal productivity app
+Learning project (FastAPI, DB, Docker)
+Backend for full-stack task manager
+Microservices architecture demo

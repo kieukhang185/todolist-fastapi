@@ -27,4 +27,4 @@ def create_superuser(username, password):
     print("Superuser created!")
 
 if __name__ == "__main__":
-    create_superuser("admin", "supersecretpassword")
+    create_superuser("admin", "admin")

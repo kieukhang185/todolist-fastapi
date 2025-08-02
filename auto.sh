@@ -7,7 +7,7 @@ get_current_system() {
     # Get the current system information ubuntu or debian or linux
     if [ -f /etc/os-release ]; then
         . /etc/os-release
-        echo $NAME
+        echo $NAME | awk -F ' ' '{print $1}'
     else
         exit 1
     fi
@@ -26,16 +26,16 @@ setup(){
         echo "Docker is already installed."
     fi
 
-    pushd ${WORKSPACE} || exit 1
-    ln -sf $(pwd)/auto.sh $HOME/auto.sh
-    echo "alias auto=$HOME/auto.sh" >> $HOME/.bashrc
-    popd
+    # pushd ${WORKSPACE} || exit 1
+    # ln -sf $(pwd)/auto.sh $HOME/auto.sh
+    # echo "alias auto=$HOME/auto.sh" >> $HOME/.bashrc
+    # popd
 }
 
 install_docker() {
 
     system=$1
-    if [ "$system" != "Ubuntu" ] && [ "$system" != "Debian" ]; then
+    if [[ "$system" != "Ubuntu" ]] && [[ "$system" != "Debian" ]]; then
         echo "This script is designed for Ubuntu or Debian systems."
         return 1
     fi
